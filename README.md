@@ -1,15 +1,16 @@
 # CV Audit
 
 AI-powered CV analysis using Next.js + Anthropic Claude.
-
 Paste a job posting and your CV → get a match score, keyword gap analysis, and AI-rewritten bullet suggestions.
 
+### [vercel app link](https://cv-audit.vercel.app/)
 ## Stack
 
 - **Next.js 14** (App Router)
 - **TypeScript**
 - **Tailwind CSS**
-- **Anthropic SDK** (`claude-sonnet-4-6`)
+- **Anthropic SDK** (`claude-sonnet-4-6`
+- vercel (for deployment)
 
 ## Setup
 
