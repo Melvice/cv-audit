@@ -1,26 +1,40 @@
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=JetBrains+Mono:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
 @tailwind utilities;
 
 :root {
-  --bg: #FFFFFF;
-  --bg-subtle: #F8FAFC;
-  --bg-muted: #F1F5F9;
-  --border: #E2E8F0;
-  --border-strong: #CBD5E1;
-  --navy: #0F1629;
-  --navy-mid: #1E2D45;
-  --steel: #64748B;
-  --steel-light: #94A3B8;
-  --accent: #0EA5E9;
-  --accent-dark: #0284C7;
-  --success: #059669;
-  --warning: #D97706;
-  --danger: #DC2626;
-  --font-display: 'Barlow Condensed', sans-serif;
-  --font-body: 'DM Sans', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --bg: #F5F6F7;
+  --bg-card: #FFFFFF;
+  --bg-muted: #ECEEF1;
+
+  --border: #D5D8DE;
+  --border-strong: #B8BCC4;
+
+  --foreground: #0A0A0C;
+  --primary: #1C1F26;
+  --secondary: #3A3F4B;
+  --muted-foreground: #6E7480;
+
+  --cta: #B8860B;          /* Gold */
+  --cta-hover: #DAA520;    /* Lighter gold */
+  --cta-foreground: #FFFFFF;
+
+  --ring: #B8860B;
+
+  --success: #0FA97D;
+  --warning: #E19A20;
+  --danger: #D64545;
+
+  --font: 'Plus Jakarta Sans', sans-serif;
+
+  --radius: 8px;
+  --radius-lg: 12px;
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1),
+            0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
+
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -29,9 +43,9 @@
 }
 
 html {
-  font-family: var(--font-body);
+  font-family: var(--font);
   background: var(--bg);
-  color: var(--navy);
+  color: var(--foreground);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -44,4 +58,4 @@ body {
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg-muted); }
 ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--steel); }
+::-webkit-scrollbar-thumb:hover { background: var(--muted-foreground); }

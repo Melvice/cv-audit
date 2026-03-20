@@ -11,112 +11,122 @@ interface ResultsPanelProps {
 
 export default function ResultsPanel({ result, onReset }: ResultsPanelProps) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 
-      {/* Score + Summary */}
+      {/* Score + Summary card */}
       <div style={{
+        background: 'var(--bg-card)',
         border: '1px solid var(--border)',
-        borderRadius: '12px',
-        padding: '1.75rem',
-        background: 'var(--bg)',
+        borderRadius: 'var(--radius-lg)',
+        padding: '1.5rem',
         display: 'flex',
-        gap: '2rem',
+        gap: '1.75rem',
         alignItems: 'center',
+        boxShadow: 'var(--shadow-sm)',
       }}>
         <ScoreRing score={result.score} />
-        <div style={{ flex: 1 }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
           <SectionLabel>AI Feedback</SectionLabel>
           <p style={{
-            fontFamily: 'var(--font-body)',
-            fontSize: '0.9rem',
+            fontFamily: 'var(--font)',
+            fontSize: '0.875rem',
+            fontWeight: 400,
             lineHeight: 1.7,
-            color: 'var(--navy)',
+            color: 'var(--foreground)',
             marginBottom: '1rem',
           }}>
             {result.summary}
           </p>
-          <div style={{ display: 'flex', gap: '1.5rem' }}>
+          <div style={{ display: 'flex', gap: '1.25rem' }}>
             <Stat label="Matched" value={result.matched_keywords.length} color="var(--success)" />
             <Stat label="Missing" value={result.missing_keywords.length} color="var(--danger)" />
-            <Stat label="Rewrites" value={result.suggestions.length} color="var(--accent)" />
+            <Stat label="Rewrites" value={result.suggestions.length} color="var(--cta)" />
           </div>
         </div>
       </div>
 
-      {/* Keywords */}
+      {/* Keywords card */}
       <div style={{
+        background: 'var(--bg-card)',
         border: '1px solid var(--border)',
-        borderRadius: '12px',
-        padding: '1.5rem',
-        background: 'var(--bg)',
+        borderRadius: 'var(--radius-lg)',
+        padding: '1.375rem',
+        boxShadow: 'var(--shadow-sm)',
       }}>
-        <SectionTitle>Keywords</SectionTitle>
+        <CardTitle>Keywords</CardTitle>
         {result.matched_keywords.length > 0 && (
           <div style={{ marginBottom: '1rem' }}>
-            <SubLabel color="var(--success)">✓ Present</SubLabel>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginTop: '0.5rem' }}>
+            <GroupLabel color="var(--success)">✓ Present</GroupLabel>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem', marginTop: '0.5rem' }}>
               {result.matched_keywords.map(kw => (
-                <Keyword key={kw} color="var(--success)" bg="#F0FDF4" border="#BBF7D0">{kw}</Keyword>
+                <Badge key={kw} color="var(--success)" bg="#F0FDF4" border="#BBF7D0">{kw}</Badge>
               ))}
             </div>
           </div>
         )}
         {result.missing_keywords.length > 0 && (
           <div>
-            <SubLabel color="var(--danger)">✗ Missing</SubLabel>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginTop: '0.5rem' }}>
+            <GroupLabel color="var(--danger)">✗ Missing</GroupLabel>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem', marginTop: '0.5rem' }}>
               {result.missing_keywords.map(kw => (
-                <Keyword key={kw} color="var(--danger)" bg="#FFF1F2" border="#FECDD3">{kw}</Keyword>
+                <Badge key={kw} color="var(--danger)" bg="#FFF1F2" border="#FECDD3">{kw}</Badge>
               ))}
             </div>
           </div>
         )}
       </div>
 
-      {/* Suggestions */}
+      {/* Suggestions card */}
       {result.suggestions.length > 0 && (
         <div style={{
+          background: 'var(--bg-card)',
           border: '1px solid var(--border)',
-          borderRadius: '12px',
-          padding: '1.5rem',
-          background: 'var(--bg)',
+          borderRadius: 'var(--radius-lg)',
+          padding: '1.375rem',
+          boxShadow: 'var(--shadow-sm)',
         }}>
-          <SectionTitle>Rewrite Suggestions</SectionTitle>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          <CardTitle>Rewrite Suggestions</CardTitle>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.375rem' }}>
             {result.suggestions.map((s, i) => (
-              <div key={i} style={{ borderLeft: '2px solid var(--border-strong)', paddingLeft: '1rem' }}>
-                <SubLabel color="var(--steel-light)">Before</SubLabel>
+              <div key={i} style={{
+                paddingLeft: '0.875rem',
+                borderLeft: '2px solid var(--border-strong)',
+              }}>
+                <GroupLabel color="var(--muted-foreground)">Before</GroupLabel>
                 <p style={{
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.85rem',
-                  color: 'var(--steel)',
-                  lineHeight: 1.55,
-                  marginTop: '0.3rem',
-                  marginBottom: '0.875rem',
+                  fontFamily: 'var(--font)',
+                  fontSize: '0.8125rem',
+                  fontWeight: 400,
+                  color: 'var(--muted-foreground)',
+                  lineHeight: 1.6,
+                  marginTop: '0.25rem',
+                  marginBottom: '0.75rem',
                   textDecoration: 'line-through',
                   textDecorationColor: 'var(--border-strong)',
                 }}>
                   {s.original}
                 </p>
-                <SubLabel color="var(--success)">After</SubLabel>
+                <GroupLabel color="var(--success)">After</GroupLabel>
                 <p style={{
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.85rem',
-                  color: 'var(--navy)',
-                  lineHeight: 1.55,
-                  marginTop: '0.3rem',
+                  fontFamily: 'var(--font)',
+                  fontSize: '0.8125rem',
+                  fontWeight: 400,
+                  color: 'var(--primary)',
+                  lineHeight: 1.6,
+                  marginTop: '0.25rem',
                   marginBottom: '0.5rem',
                   background: '#F0FDF4',
-                  padding: '0.6rem 0.75rem',
+                  padding: '0.5rem 0.75rem',
                   borderRadius: '6px',
                   border: '1px solid #BBF7D0',
                 }}>
                   {s.rewritten}
                 </p>
                 <p style={{
-                  fontFamily: 'var(--font-body)',
+                  fontFamily: 'var(--font)',
                   fontSize: '0.75rem',
-                  color: 'var(--steel-light)',
+                  fontWeight: 400,
+                  color: 'var(--muted-foreground)',
                   fontStyle: 'italic',
                   lineHeight: 1.5,
                 }}>
@@ -128,31 +138,40 @@ export default function ResultsPanel({ result, onReset }: ResultsPanelProps) {
         </div>
       )}
 
-      {/* Reset */}
+      {/* Reset button */}
       <button
         onClick={onReset}
         style={{
-          fontFamily: 'var(--font-display)',
-          fontSize: '0.85rem',
-          fontWeight: 700,
-          letterSpacing: '0.1em',
-          textTransform: 'uppercase',
-          color: 'var(--steel)',
-          background: 'transparent',
+          fontFamily: 'var(--font)',
+          fontSize: '0.875rem',
+          fontWeight: 500,
+          color: 'var(--secondary)',
+          background: 'var(--bg-card)',
           border: '1px solid var(--border)',
-          borderRadius: '8px',
-          padding: '0.75rem 1.5rem',
+          borderRadius: 'var(--radius)',
+          padding: '0 1.5rem',
+          height: '44px',
           cursor: 'pointer',
           width: '100%',
-          transition: 'border-color 0.15s ease, color 0.15s ease',
+          transition: 'border-color 0.15s ease, color 0.15s ease, background 0.15s ease',
+          outline: 'none',
         }}
         onMouseEnter={e => {
-          e.currentTarget.style.borderColor = 'var(--navy)';
-          e.currentTarget.style.color = 'var(--navy)';
+          e.currentTarget.style.borderColor = 'var(--primary)';
+          e.currentTarget.style.color = 'var(--primary)';
+          e.currentTarget.style.background = 'var(--bg)';
         }}
         onMouseLeave={e => {
           e.currentTarget.style.borderColor = 'var(--border)';
-          e.currentTarget.style.color = 'var(--steel)';
+          e.currentTarget.style.color = 'var(--secondary)';
+          e.currentTarget.style.background = 'var(--bg-card)';
+        }}
+        onFocus={e => {
+          e.currentTarget.style.outline = '2px solid var(--ring)';
+          e.currentTarget.style.outlineOffset = '2px';
+        }}
+        onBlur={e => {
+          e.currentTarget.style.outline = 'none';
         }}
       >
         ← New Analysis
@@ -161,18 +180,18 @@ export default function ResultsPanel({ result, onReset }: ResultsPanelProps) {
   );
 }
 
-function SectionTitle({ children }: { children: ReactNode }) {
+function CardTitle({ children }: { children: ReactNode }) {
   return (
     <div style={{
-      fontFamily: 'var(--font-display)',
-      fontSize: '0.82rem',
-      fontWeight: 700,
-      letterSpacing: '0.12em',
+      fontFamily: 'var(--font)',
+      fontSize: '0.75rem',
+      fontWeight: 600,
+      letterSpacing: '0.06em',
       textTransform: 'uppercase',
-      color: 'var(--steel)',
+      color: 'var(--secondary)',
       paddingBottom: '0.75rem',
       borderBottom: '1px solid var(--border)',
-      marginBottom: '1rem',
+      marginBottom: '0.875rem',
     }}>
       {children}
     </div>
@@ -182,12 +201,12 @@ function SectionTitle({ children }: { children: ReactNode }) {
 function SectionLabel({ children }: { children: ReactNode }) {
   return (
     <div style={{
-      fontFamily: 'var(--font-display)',
-      fontSize: '0.72rem',
-      fontWeight: 700,
-      letterSpacing: '0.14em',
+      fontFamily: 'var(--font)',
+      fontSize: '0.6875rem',
+      fontWeight: 600,
+      letterSpacing: '0.08em',
       textTransform: 'uppercase',
-      color: 'var(--steel-light)',
+      color: 'var(--muted-foreground)',
       marginBottom: '0.5rem',
     }}>
       {children}
@@ -195,13 +214,13 @@ function SectionLabel({ children }: { children: ReactNode }) {
   );
 }
 
-function SubLabel({ children, color }: { children: ReactNode; color: string }) {
+function GroupLabel({ children, color }: { children: ReactNode; color: string }) {
   return (
     <span style={{
-      fontFamily: 'var(--font-display)',
-      fontSize: '0.68rem',
-      fontWeight: 700,
-      letterSpacing: '0.1em',
+      fontFamily: 'var(--font)',
+      fontSize: '0.6875rem',
+      fontWeight: 600,
+      letterSpacing: '0.06em',
       textTransform: 'uppercase',
       color,
     }}>
@@ -210,7 +229,7 @@ function SubLabel({ children, color }: { children: ReactNode; color: string }) {
   );
 }
 
-function Keyword({
+function Badge({
   children, color, bg, border,
 }: {
   children: ReactNode;
@@ -220,14 +239,16 @@ function Keyword({
 }) {
   return (
     <span style={{
-      fontFamily: 'var(--font-mono)',
-      fontSize: '0.72rem',
+      fontFamily: 'var(--font)',
+      fontSize: '0.75rem',
+      fontWeight: 500,
       color,
       background: bg,
       border: `1px solid ${border}`,
-      borderRadius: '4px',
-      padding: '0.2rem 0.5rem',
+      borderRadius: '999px',
+      padding: '0.2rem 0.6rem',
       letterSpacing: '0.01em',
+      whiteSpace: 'nowrap',
     }}>
       {children}
     </span>
@@ -238,22 +259,23 @@ function Stat({ label, value, color }: { label: string; value: number; color: st
   return (
     <div>
       <div style={{
-        fontFamily: 'var(--font-display)',
-        fontSize: '1.6rem',
-        fontWeight: 800,
+        fontFamily: 'var(--font)',
+        fontSize: '1.5rem',
+        fontWeight: 700,
         color,
         lineHeight: 1,
+        fontVariantNumeric: 'tabular-nums',
       }}>
         {value}
       </div>
       <div style={{
-        fontFamily: 'var(--font-display)',
-        fontSize: '0.62rem',
-        fontWeight: 700,
-        letterSpacing: '0.12em',
+        fontFamily: 'var(--font)',
+        fontSize: '0.6875rem',
+        fontWeight: 500,
+        letterSpacing: '0.06em',
         textTransform: 'uppercase',
-        color: 'var(--steel-light)',
-        marginTop: '2px',
+        color: 'var(--muted-foreground)',
+        marginTop: '3px',
       }}>
         {label}
       </div>
