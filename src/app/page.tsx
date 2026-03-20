@@ -1,65 +1,261 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import { AnalyzeResult } from "@/types";
+import ResultsPanel from "@/components/ResultsPanel";
+import Header from "@/components/Header";
 
 export default function Home() {
+  const [cvText, setCvText] = useState("");
+  const [jobPosting, setJobPosting] = useState("");
+  const [result, setResult] = useState<AnalyzeResult | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function analyze() {
+    if (!cvText.trim() || !jobPosting.trim()) {
+      setError("Please fill in both fields before analyzing.");
+      return;
+    }
+    setError(null);
+    setLoading(true);
+    try {
+      const res = await fetch("/api/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cvText, jobPosting }),
+      });
+      if (!res.ok) throw new Error("Analysis failed");
+      const data: AnalyzeResult = await res.json();
+      setResult(data);
+    } catch {
+      setError("Analysis failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function reset() {
+    setResult(null);
+    setError(null);
+  }
+
+  const textareaStyle: React.CSSProperties = {
+    fontFamily: 'var(--font-body)',
+    fontSize: '0.875rem',
+    fontWeight: 300,
+    lineHeight: 1.65,
+    color: 'var(--navy)',
+    background: 'var(--bg-subtle)',
+    border: '1px solid var(--border)',
+    borderRadius: '8px',
+    padding: '1rem',
+    resize: 'vertical',
+    outline: 'none',
+    width: '100%',
+    transition: 'border-color 0.15s ease',
+  };
+
+  const labelStyle: React.CSSProperties = {
+    fontFamily: 'var(--font-display)',
+    fontSize: '0.8rem',
+    fontWeight: 700,
+    letterSpacing: '0.12em',
+    textTransform: 'uppercase',
+    color: 'var(--steel)',
+    display: 'block',
+    marginBottom: '0.5rem',
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+    <div style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex', flexDirection: 'column' }}>
+      <Header />
+      <main style={{
+        flex: 1,
+        maxWidth: '1400px',
+        margin: '0 auto',
+        width: '100%',
+        padding: '2rem',
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: '2rem',
+        alignItems: 'start',
+      }}>
+        {/* LEFT PANEL */}
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1.5rem',
+          position: 'sticky',
+          top: '72px',
+        }}>
+          <div>
+            <label style={labelStyle}>Job Posting</label>
+            <textarea
+              value={jobPosting}
+              onChange={e => setJobPosting(e.target.value)}
+              placeholder="Paste the full job description here..."
+              rows={12}
+              style={textareaStyle}
+              onFocus={e => (e.currentTarget.style.borderColor = 'var(--accent)')}
+              onBlur={e => (e.currentTarget.style.borderColor = 'var(--border)')}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+          </div>
+
+          <div>
+            <label style={labelStyle}>Your CV</label>
+            <textarea
+              value={cvText}
+              onChange={e => setCvText(e.target.value)}
+              placeholder="Paste your CV / resume text here..."
+              rows={12}
+              style={textareaStyle}
+              onFocus={e => (e.currentTarget.style.borderColor = 'var(--accent)')}
+              onBlur={e => (e.currentTarget.style.borderColor = 'var(--border)')}
+            />
+          </div>
+
+          {error && (
+            <p style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.8rem',
+              color: 'var(--danger)',
+              padding: '0.75rem 1rem',
+              background: '#FFF1F2',
+              border: '1px solid #FECDD3',
+              borderRadius: '6px',
+            }}>
+              {error}
+            </p>
+          )}
+
+          <button
+            onClick={analyze}
+            disabled={loading}
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: '1rem',
+              fontWeight: 700,
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              color: loading ? 'var(--steel-light)' : '#FFFFFF',
+              background: loading ? 'var(--bg-muted)' : 'var(--navy)',
+              border: 'none',
+              borderRadius: '8px',
+              padding: '0.9rem 2rem',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              transition: 'background 0.15s ease',
+              width: '100%',
+            }}
+            onMouseEnter={e => { if (!loading) e.currentTarget.style.background = 'var(--accent)'; }}
+            onMouseLeave={e => { if (!loading) e.currentTarget.style.background = 'var(--navy)'; }}
           >
-            Documentation
-          </a>
+            {loading ? 'Analyzing...' : 'Analyze CV →'}
+          </button>
+        </div>
+
+        {/* RIGHT PANEL */}
+        <div>
+          {result ? (
+            <ResultsPanel result={result} onReset={reset} />
+          ) : (
+            <EmptyState loading={loading} />
+          )}
         </div>
       </main>
     </div>
+  );
+}
+
+function EmptyState({ loading }: { loading: boolean }) {
+  return (
+    <div style={{
+      border: '1px dashed var(--border-strong)',
+      borderRadius: '12px',
+      padding: '4rem 2rem',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '1rem',
+      minHeight: '500px',
+      background: 'var(--bg-subtle)',
+    }}>
+      {loading ? (
+        <>
+          <LoadingSpinner />
+          <p style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: '1.1rem',
+            fontWeight: 700,
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            color: 'var(--steel)',
+          }}>
+            Analyzing your CV...
+          </p>
+          <p style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: '0.8rem',
+            color: 'var(--steel-light)',
+            textAlign: 'center',
+          }}>
+            Claude is reviewing your CV against the job posting
+          </p>
+        </>
+      ) : (
+        <>
+          <div style={{
+            width: '48px',
+            height: '48px',
+            borderRadius: '50%',
+            border: '1.5px dashed var(--border-strong)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <path d="M9 3v12M3 9h12" stroke="var(--steel-light)" strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
+          </div>
+          <p style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: '1.1rem',
+            fontWeight: 700,
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            color: 'var(--steel)',
+          }}>
+            Results will appear here
+          </p>
+          <p style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: '0.8rem',
+            color: 'var(--steel-light)',
+            textAlign: 'center',
+            maxWidth: '240px',
+            lineHeight: 1.6,
+          }}>
+            Fill in the job posting and your CV, then click Analyze CV
+          </p>
+        </>
+      )}
+    </div>
+  );
+}
+
+function LoadingSpinner() {
+  return (
+    <>
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      <div style={{
+        width: '40px',
+        height: '40px',
+        border: '2px solid var(--border)',
+        borderTopColor: 'var(--accent)',
+        borderRadius: '50%',
+        animation: 'spin 0.8s linear infinite',
+      }} />
+    </>
   );
 }
