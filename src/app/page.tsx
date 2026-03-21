@@ -4,6 +4,9 @@ import { useState } from "react";
 import { AnalyzeResult } from "@/types";
 import ResultsPanel from "@/components/ResultsPanel";
 import Header from "@/components/Header";
+import ProblemSection from "@/components/ProblemSection";
+import WhySection from "@/components/WhySection";
+import FaqSection from "@/components/FaqSection";
 
 export default function Home() {
   const [cvText, setCvText] = useState("");
@@ -135,6 +138,10 @@ export default function Home() {
           )}
         </div>
       </main>
+
+      <ProblemSection />
+      <WhySection />
+      <FaqSection />
     </div>
   );
 }
